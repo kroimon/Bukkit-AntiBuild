@@ -1,6 +1,5 @@
 package com.nijikokun.bukkit.AB;
 
-import com.nijikokun.bukkit.AB.AntiBuild;
 import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
 

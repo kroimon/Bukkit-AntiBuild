@@ -1,6 +1,5 @@
 package com.nijikokun.bukkit.AB;
 
-import com.nijikokun.bukkit.AB.AntiBuild;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockInteractEvent;

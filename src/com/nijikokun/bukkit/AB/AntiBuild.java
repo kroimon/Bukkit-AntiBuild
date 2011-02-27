@@ -1,9 +1,6 @@
 package com.nijikokun.bukkit.AB;
 
-import com.nijiko.Misc;
 import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.AB.BListener;
-import com.nijikokun.bukkit.AB.PListener;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import java.util.logging.Logger;
 
@@ -23,7 +20,6 @@ public class AntiBuild extends JavaPlugin {
 	public PListener pl = new PListener(this);
 	public BListener bl = new BListener(this);
 	public PermissionHandler permissions;
-	public Misc Misc = new Misc();
 	public static boolean show = true;
 
 	public void onEnable() {
