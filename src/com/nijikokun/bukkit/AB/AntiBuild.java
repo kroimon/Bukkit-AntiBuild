@@ -18,6 +18,8 @@ public class AntiBuild extends JavaPlugin {
 	public static final String version = "1.1";
 
 	private PermissionHandler permissions;
+	private boolean multiworldSupport;
+
 	private PListener pl = new PListener(this);
 	private BListener bl = new BListener(this);
 
@@ -28,7 +30,7 @@ public class AntiBuild extends JavaPlugin {
 			return;
 		registerEvents();
 
-		log.info("[" + name + "] version [" + version + " / " + codename + "] enabled");
+		log.info("[" + name + "] version [" + version + " / " + codename + "] enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
 	}
 
 	public void onDisable() {
@@ -41,6 +43,9 @@ public class AntiBuild extends JavaPlugin {
 			if (plugin != null) {
 				getServer().getPluginManager().enablePlugin(plugin);
 				permissions = ((Permissions) plugin).getHandler();
+
+				String pluginVersion = plugin.getDescription().getVersion();
+				multiworldSupport = pluginVersion.compareTo("2.1") >= 0;
 			} else {
 				log.info("[" + name + "] version [" + version + "] not enabled. Permissions not detected.");
 				getServer().getPluginManager().disablePlugin(this);
@@ -57,10 +62,16 @@ public class AntiBuild extends JavaPlugin {
 	}
 
 	public boolean canBuild(Player player) {
-		String worldName = player.getWorld().getName();
-		String group = permissions.getGroup(worldName, player.getName());
-		if (group != null)
-			return permissions.canGroupBuild(worldName, group);
+		if (multiworldSupport) {
+			String worldName = player.getWorld().getName();
+			String group = permissions.getGroup(worldName, player.getName());
+			if (group != null)
+				return permissions.canGroupBuild(worldName, group);
+		} else {
+			String group = permissions.getGroup(player.getName());
+			if (group != null)
+				return permissions.canGroupBuild(group);
+		}
 		return true;
 	}
 
