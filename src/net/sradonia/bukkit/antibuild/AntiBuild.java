@@ -1,4 +1,4 @@
-package com.nijikokun.bukkit.AB;
+package net.sradonia.bukkit.antibuild;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
@@ -15,7 +15,7 @@ public class AntiBuild extends JavaPlugin {
 
 	public static final String name = "AntiBuild";
 	public static final String codename = "Really Reborn";
-	public static final String version = "1.1";
+	public static final String version = "1.2";
 
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;

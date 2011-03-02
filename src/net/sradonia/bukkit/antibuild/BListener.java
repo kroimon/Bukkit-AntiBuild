@@ -1,4 +1,4 @@
-package com.nijikokun.bukkit.AB;
+package net.sradonia.bukkit.antibuild;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageEvent;
