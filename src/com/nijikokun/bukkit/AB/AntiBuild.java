@@ -20,7 +20,6 @@ public class AntiBuild extends JavaPlugin {
 	public PListener pl = new PListener(this);
 	public BListener bl = new BListener(this);
 	public PermissionHandler permissions;
-	public static boolean show = true;
 
 	public void onEnable() {
 		getConfiguration().load();
