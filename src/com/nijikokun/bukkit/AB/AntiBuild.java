@@ -17,9 +17,9 @@ public class AntiBuild extends JavaPlugin {
 	public static final String codename = "Really Reborn";
 	public static final String version = "1.1";
 
-	public PListener pl = new PListener(this);
-	public BListener bl = new BListener(this);
-	public PermissionHandler permissions;
+	private PermissionHandler permissions;
+	private PListener pl = new PListener(this);
+	private BListener bl = new BListener(this);
 
 	public void onEnable() {
 		getConfiguration().load();
@@ -35,9 +35,9 @@ public class AntiBuild extends JavaPlugin {
 		log.info("[" + name + "] version [" + version + " / " + codename + "] disabled");
 	}
 
-	public boolean setupPermissions() {
-		Plugin plugin = getServer().getPluginManager().getPlugin("Permissions");
+	private boolean setupPermissions() {
 		if (permissions == null) {
+			Plugin plugin = getServer().getPluginManager().getPlugin("Permissions");
 			if (plugin != null) {
 				getServer().getPluginManager().enablePlugin(plugin);
 				permissions = ((Permissions) plugin).getHandler();
