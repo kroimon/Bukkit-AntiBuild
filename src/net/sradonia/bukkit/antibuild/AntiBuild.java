@@ -10,15 +10,16 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 public class AntiBuild extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 
+	private static final String CONFIG_MESSAGE = "message";
+	private static final String CONFIG_MESSAGE_DEFAULT = "You don't have permission to build!";
+
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;
-
-	private PListener pl = new PListener(this);
-	private BListener bl = new BListener(this);
 
 	public void onEnable() {
 		PluginDescriptionFile pdf = getDescription();
@@ -28,8 +29,27 @@ public class AntiBuild extends JavaPlugin {
 			return;
 		}
 
+		// Load configuration
+		Configuration config = getConfiguration();
+		if (!getDataFolder().exists()) {
+			// Set and save default settings
+			config.setProperty(CONFIG_MESSAGE, CONFIG_MESSAGE_DEFAULT);
+			config.save();
+		} else {
+			config.load();
+		}
+		String message = config.getString(CONFIG_MESSAGE);
+		if (message != null) {
+			message = message.trim();
+			if (message.length() == 0)
+				message = null;
+		}
+
+		// Register listeners
+		BListener bl = new BListener(this, message);
 		getServer().getPluginManager().registerEvent(Type.BLOCK_DAMAGED, bl, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Type.BLOCK_PLACED, bl, Priority.Normal, this);
+		PListener pl = new PListener(this, message);
 		getServer().getPluginManager().registerEvent(Type.PLAYER_ITEM, pl, Priority.Normal, this);
 
 		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
