@@ -8,14 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AntiBuild extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
-
-	public static final String name = "AntiBuild";
-	public static final String codename = "Really Reborn";
-	public static final String version = "1.2";
 
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;
@@ -24,41 +21,40 @@ public class AntiBuild extends JavaPlugin {
 	private BListener bl = new BListener(this);
 
 	public void onEnable() {
-		getConfiguration().load();
+		PluginDescriptionFile pdf = getDescription();
 
-		if (!setupPermissions())
+		if (!setupPermissions()) {
+			log.severe("[" + pdf.getName() + "] version " + pdf.getVersion() + " not enabled! Permission plugin not detected!");
 			return;
-		registerEvents();
-
-		log.info("[" + name + "] version [" + version + " / " + codename + "] enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
-	}
-
-	public void onDisable() {
-		log.info("[" + name + "] version [" + version + " / " + codename + "] disabled");
-	}
-
-	private boolean setupPermissions() {
-		if (permissions == null) {
-			Plugin plugin = getServer().getPluginManager().getPlugin("Permissions");
-			if (plugin != null) {
-				getServer().getPluginManager().enablePlugin(plugin);
-				permissions = ((Permissions) plugin).getHandler();
-
-				String pluginVersion = plugin.getDescription().getVersion();
-				multiworldSupport = pluginVersion.compareTo("2.1") >= 0;
-			} else {
-				log.info("[" + name + "] version [" + version + "] not enabled. Permissions not detected.");
-				getServer().getPluginManager().disablePlugin(this);
-				return false;
-			}
 		}
-		return true;
-	}
 
-	private void registerEvents() {
 		getServer().getPluginManager().registerEvent(Type.BLOCK_DAMAGED, bl, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Type.BLOCK_PLACED, bl, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Type.PLAYER_ITEM, pl, Priority.Normal, this);
+
+		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
+	}
+
+	public void onDisable() {
+		permissions = null;
+
+		PluginDescriptionFile pdf = getDescription();
+		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " disabled");
+	}
+
+	private boolean setupPermissions() {
+		Plugin plugin = getServer().getPluginManager().getPlugin("Permissions");
+		if (plugin != null) {
+			getServer().getPluginManager().enablePlugin(plugin);
+			permissions = ((Permissions) plugin).getHandler();
+
+			String pluginVersion = plugin.getDescription().getVersion();
+			multiworldSupport = pluginVersion.compareTo("2.1") >= 0;
+		} else {
+			getServer().getPluginManager().disablePlugin(this);
+			return false;
+		}
+		return true;
 	}
 
 	public boolean canBuild(Player player) {
