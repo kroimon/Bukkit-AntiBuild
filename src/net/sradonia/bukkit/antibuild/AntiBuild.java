@@ -57,6 +57,7 @@ public class AntiBuild extends JavaPlugin {
 		return true;
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean canBuild(Player player) {
 		if (multiworldSupport) {
 			String worldName = player.getWorld().getName();
