@@ -14,6 +14,7 @@ public class BListener extends BlockListener {
 		this.message = message;
 	}
 
+	@Override
 	public void onBlockDamage(BlockDamageEvent event) {
 		Player player = event.getPlayer();
 		if (!plugin.canBuild(player)) {
@@ -23,6 +24,7 @@ public class BListener extends BlockListener {
 		}
 	}
 
+	@Override
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
 		if (!plugin.canBuild(player)) {

@@ -13,6 +13,7 @@ public class PListener extends PlayerListener {
 		this.message = message;
 	}
 
+	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (!plugin.canBuild(player)) {
