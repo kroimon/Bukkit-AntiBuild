@@ -1,7 +1,7 @@
 package net.sradonia.bukkit.antibuild;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 
 public class PListener extends PlayerListener {
@@ -13,7 +13,7 @@ public class PListener extends PlayerListener {
 		this.message = message;
 	}
 
-	public void onPlayerItem(PlayerItemEvent event) {
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		if (!plugin.canBuild(player)) {
 			event.setCancelled(true);
