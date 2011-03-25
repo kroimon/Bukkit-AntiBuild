@@ -49,8 +49,6 @@ public class AntiBuild extends JavaPlugin {
 		BListener bl = new BListener(this, message);
 		getServer().getPluginManager().registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
-		PListener pl = new PListener(this, message);
-		getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, pl, Priority.Normal, this);
 
 		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
 	}
