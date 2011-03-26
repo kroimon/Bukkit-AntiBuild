@@ -1,6 +1,8 @@
-/.settings
-/bin
+# Binaries
 /lib
+/target
+
+# Eclipse stuff
+/.settings
 /.classpath
 /.project
-/*.jardesc

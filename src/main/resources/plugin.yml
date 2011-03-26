@@ -1,4 +1,4 @@
-name: AntiBuild
+name: ${project.name}
 main: net.sradonia.bukkit.antibuild.AntiBuild
-version: 1.3
+version: ${project.version}
 author: kroimon
