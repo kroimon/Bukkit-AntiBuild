@@ -9,6 +9,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
@@ -46,9 +47,12 @@ public class AntiBuild extends JavaPlugin {
 		}
 
 		// Register listeners
+		PluginManager pluginManager = getServer().getPluginManager();
 		BListener bl = new BListener(this, message);
-		getServer().getPluginManager().registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
+		pluginManager.registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
+		pluginManager.registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
+		PListener pl = new PListener(this, message);
+		pluginManager.registerEvent(Type.PLAYER_INTERACT, pl, Priority.Normal, this);
 
 		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
 	}
@@ -86,6 +90,21 @@ public class AntiBuild extends JavaPlugin {
 			String group = permissions.getGroup(player.getName());
 			if (group != null)
 				return permissions.canGroupBuild(group);
+		}
+		return true;
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean canInteract(Player player) {
+		if (multiworldSupport) {
+			String worldName = player.getWorld().getName();
+			String group = permissions.getGroup(worldName, player.getName());
+			if (group != null)
+				return permissions.getGroupPermissionBoolean(worldName, group, "interact"); 
+		} else {
+			String group = permissions.getGroup(player.getName());
+			if (group != null)
+				return permissions.getGroupPermissionBoolean(group, "interact"); 
 		}
 		return true;
 	}
