@@ -18,6 +18,9 @@ public class AntiBuild extends JavaPlugin {
 
 	private static final String CONFIG_MESSAGE = "message";
 	private static final String CONFIG_MESSAGE_DEFAULT = "You don't have permission to build!";
+	private static final String CONFIG_INTERACT_MESSAGE = "interactMessage";
+	private static final String CONFIG_INTERACT_MESSAGE_DEFAULT = "You don't have permission to interact with the world!";
+	
 
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;
@@ -32,29 +35,40 @@ public class AntiBuild extends JavaPlugin {
 
 		// Load configuration
 		Configuration config = getConfiguration();
-		if (!getDataFolder().exists()) {
-			// Set and save default settings
+		boolean configChanged = false;
+		if (config.getProperty(CONFIG_MESSAGE) == null) {
 			config.setProperty(CONFIG_MESSAGE, CONFIG_MESSAGE_DEFAULT);
+			configChanged = true;
+		}
+		if (config.getProperty(CONFIG_INTERACT_MESSAGE) == null) {
+			config.setProperty(CONFIG_INTERACT_MESSAGE, CONFIG_INTERACT_MESSAGE_DEFAULT);
+			configChanged = true;
+		}
+		if (configChanged)
 			config.save();
-		} else {
-			config.load();
-		}
-		String message = config.getString(CONFIG_MESSAGE);
-		if (message != null) {
-			message = message.trim();
-			if (message.length() == 0)
-				message = null;
-		}
+
+		String message = getConfigString(CONFIG_MESSAGE);
+		String interactMessage = getConfigString(CONFIG_INTERACT_MESSAGE);
 
 		// Register listeners
 		PluginManager pluginManager = getServer().getPluginManager();
 		BListener bl = new BListener(this, message);
 		pluginManager.registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
 		pluginManager.registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
-		PListener pl = new PListener(this, message);
+		PListener pl = new PListener(this, interactMessage);
 		pluginManager.registerEvent(Type.PLAYER_INTERACT, pl, Priority.Normal, this);
 
 		log.info("[" + pdf.getName() + "] version " + pdf.getVersion() + " enabled " + (multiworldSupport ? "with" : "without") + " multiworld support");
+	}
+
+	private String getConfigString(String path) {
+		String s = getConfiguration().getString(path);
+		if (s != null) {
+			s = s.trim();
+			if (s.length() == 0)
+				s = null;
+		}
+		return s;
 	}
 
 	public void onDisable() {
