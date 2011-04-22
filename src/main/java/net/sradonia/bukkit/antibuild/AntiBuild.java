@@ -88,13 +88,13 @@ public class AntiBuild extends JavaPlugin {
 	private boolean setupPermissions() {
 		Plugin plugin = getServer().getPluginManager().getPlugin("Permissions");
 		if (plugin != null) {
-			getServer().getPluginManager().enablePlugin(plugin);
+			// if we got it, it should already be enabled due to Bukkits dependency resolver.
 			permissions = ((Permissions) plugin).getHandler();
 
 			String pluginVersion = plugin.getDescription().getVersion();
 			multiworldSupport = pluginVersion.compareTo("2.1") >= 0;
 		} else {
-			getServer().getPluginManager().disablePlugin(this);
+			setEnabled(false);
 			return false;
 		}
 		return true;
