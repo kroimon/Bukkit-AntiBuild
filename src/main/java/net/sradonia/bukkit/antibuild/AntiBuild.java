@@ -18,11 +18,11 @@ public class AntiBuild extends JavaPlugin {
 
 	private static final String CONFIG_MESSAGE = "message";
 	private static final String CONFIG_MESSAGE_DEFAULT = "You don't have permission to build!";
-	private static final String CONFIG_INTERACT_CHECK = "interactCheck";
+	private static final String CONFIG_INTERACT_CHECK = "interaction.check";
 	private static final boolean CONFIG_INTERACT_CHECK_DEFAULT = false;
-	private static final String CONFIG_INTERACT_MESSAGE = "interactMessage";
+	private static final String CONFIG_INTERACT_MESSAGE = "interaction.message";
 	private static final String CONFIG_INTERACT_MESSAGE_DEFAULT = "You don't have permission to interact with the world!";
-	
+
 
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;
@@ -43,11 +43,13 @@ public class AntiBuild extends JavaPlugin {
 			configChanged = true;
 		}
 		if (config.getProperty(CONFIG_INTERACT_CHECK) == null) {
-			config.setProperty(CONFIG_INTERACT_CHECK, CONFIG_INTERACT_CHECK_DEFAULT);
+			config.setProperty(CONFIG_INTERACT_CHECK, config.getBoolean("interactCheck", CONFIG_INTERACT_CHECK_DEFAULT));
+			config.removeProperty("interactCheck");
 			configChanged = true;
 		}
 		if (config.getProperty(CONFIG_INTERACT_MESSAGE) == null) {
-			config.setProperty(CONFIG_INTERACT_MESSAGE, CONFIG_INTERACT_MESSAGE_DEFAULT);
+			config.setProperty(CONFIG_INTERACT_MESSAGE, config.getString("interactMessage", CONFIG_INTERACT_MESSAGE_DEFAULT));
+			config.removeProperty("interactMessage");
 			configChanged = true;
 		}
 		if (configChanged)
