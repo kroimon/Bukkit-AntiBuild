@@ -10,13 +10,14 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class BListener extends BlockListener {
 	private final AntiBuild plugin;
 	private final String message;
+	private int messageCooldown;
 
-	private static final int MESSAGE_COOLDOWN = 3000; // 3 seconds
 	private WeakHashMap<Player, Long> lastMessageTimes = new WeakHashMap<Player, Long>();
 
-	public BListener(AntiBuild instance, String message) {
+	public BListener(AntiBuild instance, String message, int messageCooldown) {
 		this.plugin = instance;
 		this.message = message;
+		this.messageCooldown = messageCooldown;
 	}
 
 	@Override
@@ -42,7 +43,7 @@ public class BListener extends BlockListener {
 			return;
 
 		Long lastTime = lastMessageTimes.get(player);
-		if (lastTime != null && System.currentTimeMillis() - lastTime <= MESSAGE_COOLDOWN)
+		if (lastTime != null && System.currentTimeMillis() - lastTime <= messageCooldown * 1000)
 			return;
 
 		player.sendMessage(message);

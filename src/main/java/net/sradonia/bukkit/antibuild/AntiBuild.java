@@ -16,14 +16,6 @@ import org.bukkit.util.config.Configuration;
 public class AntiBuild extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 
-	private static final String CONFIG_MESSAGE = "message";
-	private static final String CONFIG_MESSAGE_DEFAULT = "You don't have permission to build!";
-	private static final String CONFIG_INTERACT_CHECK = "interaction.check";
-	private static final boolean CONFIG_INTERACT_CHECK_DEFAULT = false;
-	private static final String CONFIG_INTERACT_MESSAGE = "interaction.message";
-	private static final String CONFIG_INTERACT_MESSAGE_DEFAULT = "You don't have permission to interact with the world!";
-
-
 	private PermissionHandler permissions;
 	private boolean multiworldSupport;
 
@@ -38,18 +30,27 @@ public class AntiBuild extends JavaPlugin {
 		// Load configuration
 		Configuration config = getConfiguration();
 		boolean configChanged = false;
-		if (config.getProperty(CONFIG_MESSAGE) == null) {
-			config.setProperty(CONFIG_MESSAGE, CONFIG_MESSAGE_DEFAULT);
+		if (config.getProperty("build.message") == null) {
+			config.setProperty("build.message", config.getString("message", "You don't have permission to build!"));
+			config.removeProperty("message");
 			configChanged = true;
 		}
-		if (config.getProperty(CONFIG_INTERACT_CHECK) == null) {
-			config.setProperty(CONFIG_INTERACT_CHECK, config.getBoolean("interactCheck", CONFIG_INTERACT_CHECK_DEFAULT));
+		if (config.getProperty("build.messageCooldown") == null) {
+			config.setProperty("build.messageCooldown", 3);
+			configChanged = true;
+		}
+		if (config.getProperty("interaction.check") == null) {
+			config.setProperty("interaction.check", config.getBoolean("interactCheck", false));
 			config.removeProperty("interactCheck");
 			configChanged = true;
 		}
-		if (config.getProperty(CONFIG_INTERACT_MESSAGE) == null) {
-			config.setProperty(CONFIG_INTERACT_MESSAGE, config.getString("interactMessage", CONFIG_INTERACT_MESSAGE_DEFAULT));
+		if (config.getProperty("interaction.message") == null) {
+			config.setProperty("interaction.message", config.getString("interactMessage", "You don't have permission to interact with the world!"));
 			config.removeProperty("interactMessage");
+			configChanged = true;
+		}
+		if (config.getProperty("interaction.messageCooldown") == null) {
+			config.setProperty("interaction.messageCooldown", 3);
 			configChanged = true;
 		}
 		if (configChanged)
@@ -57,12 +58,12 @@ public class AntiBuild extends JavaPlugin {
 
 		// Register listeners
 		PluginManager pluginManager = getServer().getPluginManager();
-		BListener bl = new BListener(this, getConfigString(CONFIG_MESSAGE));
+		BListener bl = new BListener(this, getConfigString("build.message"), config.getInt("build.messageCooldown", 3));
 		pluginManager.registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
 		pluginManager.registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
 
-		if (config.getBoolean(CONFIG_INTERACT_CHECK, CONFIG_INTERACT_CHECK_DEFAULT)) {
-			PListener pl = new PListener(this, getConfigString(CONFIG_INTERACT_MESSAGE));
+		if (config.getBoolean("interaction.check", false)) {
+			PListener pl = new PListener(this, getConfigString("interaction.message"), config.getInt("interaction.cooldown", 3));
 			pluginManager.registerEvent(Type.PLAYER_INTERACT, pl, Priority.Normal, this);
 			log.info("[" + pdf.getName() + "] registered interaction listener");
 		}

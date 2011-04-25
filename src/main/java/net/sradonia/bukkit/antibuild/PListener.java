@@ -9,13 +9,14 @@ import org.bukkit.event.player.PlayerListener;
 public class PListener extends PlayerListener {
 	private final AntiBuild plugin;
 	private final String message;
+	private int messageCooldown;
 
-	private static final int MESSAGE_COOLDOWN = 3000; // 3 seconds
 	private WeakHashMap<Player, Long> lastMessageTimes = new WeakHashMap<Player, Long>();
 
-	public PListener(AntiBuild instance, String message) {
+	public PListener(AntiBuild instance, String message, int messageCooldown) {
 		this.plugin = instance;
 		this.message = message;
+		this.messageCooldown = messageCooldown;
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class PListener extends PlayerListener {
 			return;
 
 		Long lastTime = lastMessageTimes.get(player);
-		if (lastTime != null && System.currentTimeMillis() - lastTime <= MESSAGE_COOLDOWN)
+		if (lastTime != null && System.currentTimeMillis() - lastTime <= messageCooldown * 1000)
 			return;
 
 		player.sendMessage(message);
