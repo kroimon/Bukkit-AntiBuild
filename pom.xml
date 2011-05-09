@@ -4,7 +4,7 @@
 
 	<groupId>net.sradonia.bukkit</groupId>
 	<artifactId>AntiBuild</artifactId>
-	<version>1.4.1</version>
+	<version>1.5.0</version>
 	<name>AntiBuild</name>
 
 	<scm>
