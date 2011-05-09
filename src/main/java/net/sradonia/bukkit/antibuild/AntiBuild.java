@@ -65,6 +65,10 @@ public class AntiBuild extends JavaPlugin {
 		final BListener bl = new BListener(this, messageSender);
 		pluginManager.registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
 		pluginManager.registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
+		
+		final EListener el = new EListener(this, messageSender);
+		pluginManager.registerEvent(Type.PAINTING_BREAK, el, Priority.Normal, this);
+		pluginManager.registerEvent(Type.PAINTING_PLACE, el, Priority.Normal, this);
 
 		if (config.getBoolean("interaction.check", false)) {
 			message = getConfigString("interaction.message");
