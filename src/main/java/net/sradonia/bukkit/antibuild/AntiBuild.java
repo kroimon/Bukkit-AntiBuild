@@ -58,13 +58,21 @@ public class AntiBuild extends JavaPlugin {
 
 		// Register listeners
 		PluginManager pluginManager = getServer().getPluginManager();
-		BListener bl = new BListener(this, getConfigString("build.message"), config.getInt("build.messageCooldown", 3));
+
+		String message = getConfigString("build.message");
+		MessageSender messageSender = (message == null) ? null : new MessageSender(message, config.getInt("build.messageCooldown", 3));
+
+		final BListener bl = new BListener(this, messageSender);
 		pluginManager.registerEvent(Type.BLOCK_DAMAGE, bl, Priority.Normal, this);
 		pluginManager.registerEvent(Type.BLOCK_PLACE, bl, Priority.Normal, this);
 
 		if (config.getBoolean("interaction.check", false)) {
-			PListener pl = new PListener(this, getConfigString("interaction.message"), config.getInt("interaction.cooldown", 3));
+			message = getConfigString("interaction.message");
+			messageSender = (message == null) ? null : new MessageSender(message, config.getInt("interaction.messageCooldown", 3));
+
+			final PListener pl = new PListener(this, messageSender);
 			pluginManager.registerEvent(Type.PLAYER_INTERACT, pl, Priority.Normal, this);
+
 			log.info("[" + pdf.getName() + "] registered interaction listener");
 		}
 
